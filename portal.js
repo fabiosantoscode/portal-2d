@@ -3,9 +3,18 @@ var ctx = mainCanvas.getContext('2d')
 var playing = true
 var maxFallSpeed = 10;
 
+function assert(ok, msg) {
+    if (!ok) { throw new Error(msg || 'Assertion error somewhere!'); }
+}
 
-function Entity() {
-    this.size = { x: 10, y: 10 }
+
+function Entity(center, opt) {
+    opt = opt || {};
+    this.size = opt.size || { x: 10, y: 10 }
+    this.center = { x: center.x, y: center.y }
+
+    assert(!isNaN(center.x) && isFinite(center.x), 'center.x is NaN or non-finite! It\'s ' + center.x);
+    assert(!isNaN(center.y) && isFinite(center.y), 'center.y is NaN or non-finite! It\'s ' + center.y);
 }
 
 Entity.prototype.draw = function () {
@@ -30,8 +39,7 @@ Entity.prototype.collide = function (other) {
 }
 
 function Player(center, controls) {
-    Entity.call(this)
-    this.center = center
+    Entity.call(this, center)
     this.direction = { x: 0, y: 0 } // 0 - stopped, 1 - down, -1 - up
     this.speed = 1
     this.size = { x: 4, y: 10 }
@@ -51,6 +59,7 @@ Player.prototype.update = function () {
         }
     } else {
         this.direction.y = 0
+        this.center.y = this.groundedY()
     }
 
     if (this.center.x > 100) this.center.x = 100
@@ -68,10 +77,12 @@ Player.prototype.grounded = function () {
     return this.center.y + (this.size.y / 2) >= 100
 }
 
+Player.prototype.groundedY = function () {
+    return 100 - (this.size.y / 2);
+}
 
 function Portal(center, exit) {
-    this.center = center
-    this.size = { x: 10 , y: 10 }
+    Entity.call(this, center)
     this.exit = exit || null
     this.color = exit ? 'blue' : 'orange'
 }
@@ -98,8 +109,10 @@ var portalEntrance =
 var lastTransport = 0;
 var lastPortal = null;
 
+var minTrampolineSpeed = 5
+
 function Trampoline(center) {
-    Entity.apply(this, arguments)
+    Entity.call(this, center)
     this.center = center
 }
 
@@ -107,7 +120,11 @@ Trampoline.prototype = Object.create(Entity.prototype)
 
 Trampoline.prototype.update = function () {
     if (this.collide(player)) {
-        player.direction.y = -5
+        if (player.direction.y < minTrampolineSpeed) {
+            player.direction.y = -minTrampolineSpeed
+        } else {
+            player.direction.y = -player.direction.y
+        }
     }
 }
 
