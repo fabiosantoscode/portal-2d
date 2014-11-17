@@ -93,8 +93,6 @@ Portal.prototype.update = function () {
     if (this.exit) {
         if (this.collide(player) && lastPortal !== this) {
             player.center = { x: this.exit.center.x, y: this.exit.center.y }
-            //player.direction = { x: 0, y: 0 }
-            lastTransport = new Date()
             lastPortal = this.exit;
         } else if (!this.collide(player) && lastPortal === this) {
             lastPortal = null;
@@ -106,7 +104,6 @@ var portalExit =
     new Portal({ x: 40, y: 10 })
 var portalEntrance =
     new Portal({ x: 90, y: 90 }, portalExit)
-var lastTransport = 0;
 var lastPortal = null;
 
 var minTrampolineSpeed = 5
