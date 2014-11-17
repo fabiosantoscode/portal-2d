@@ -47,13 +47,13 @@ function Player(center, controls) {
 
 Player.prototype = Object.create(Entity.prototype)
 
-Player.prototype.update = function () {
-    this.center.x = this.center.x + (this.grounded() ? 1 : 0.9) * this.direction.x
-    this.center.y = this.center.y + this.direction.y
+Player.prototype.update = function (dt) {
+    this.center.x = this.center.x + (((this.grounded() ? 1 : 0.9) * this.direction.x) * dt)
+    this.center.y = this.center.y + (this.direction.y * dt)
 
     // Gravity
     if (!this.grounded()) {
-        this.direction.y += 0.1
+        this.direction.y += (0.1 * dt)
         if (this.direction.y > maxFallSpeed) {
             this.direction.y = maxFallSpeed
         }
@@ -144,11 +144,11 @@ var entities = [
     trampoline
 ]
 
-function update() {
+function update(dt) {
     if (playing == false) return;
 
     entities.forEach(function (ent) {
-        ent.update()
+        ent.update(dt)
     })
 }
 
@@ -194,13 +194,15 @@ mainCanvas.addEventListener('click', function (ev) {
     }
 })
 
-
 function tick() {
-    update()
+    var dt = (+new Date() - lastTick) / 16
+    lastTick = +new Date()
+    update(dt)
     draw()
 
     requestAnimationFrame(tick);
 }
 
-tick()
+var lastTick = +new Date()
+requestAnimationFrame(tick)
 
