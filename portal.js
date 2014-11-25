@@ -184,10 +184,13 @@ document.addEventListener('keydown', function(ev) {
     }
 })
 
-mainCanvas.addEventListener('click', function (ev) {
+mainCanvas.addEventListener('mouseup', function (ev) {
     if (ev.button == 0) {
         portalExit.center.x = ev.clientX - this.getBoundingClientRect().left
         portalExit.center.y = ev.clientY - this.getBoundingClientRect().top
+    } else if (ev.button == 2) {
+        portalEntrance.center.x = ev.clientX - this.getBoundingClientRect().left
+        portalEntrance.center.y = ev.clientY - this.getBoundingClientRect().top
     }
 })
 
