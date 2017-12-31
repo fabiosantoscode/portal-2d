@@ -1,0 +1,32 @@
+{
+  "name": "portal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "portal.js",
+  "scripts": {
+    "start": "budo lib/index.js:static/bundle.js --verbose --live",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fabiosantoscode/portal-2d.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fabiosantoscode/portal-2d/issues"
+  },
+  "homepage": "https://github.com/fabiosantoscode/portal-2d#readme",
+  "devDependencies": {
+    "budo": "^10.0.4"
+  },
+  "browserify": {
+    "transform": [
+      "bulkify"
+    ]
+  },
+  "dependencies": {
+    "bulk-require": "^1.0.1",
+    "bulkify": "^1.4.2"
+  }
+}
